@@ -124,7 +124,7 @@ The updated `run` command looks like this:
 docker run --name postgresql -d -v /opt/postgresql/data:/var/lib/postgresql brightcommerce/postgresql:latest
 ```
 
-This will make sure that the data stored in the database is not lost when the image is stopped and started again.
+This will make sure that the data stored in the database is not lost when the image is stopped and restarted.
 
 ### Securing The Server
 

@@ -49,7 +49,7 @@ Run the PostgreSQL image:
 docker run --name postgresql -d brightcommerce/postgresql:latest
 ```
 
-By default remote logins are permitted to the PostgreSQL server and a random password is assigned for the postgres user. The password set for the `postgres` user can be retrieved from the container logs.
+By default remote logins are permitted to the PostgreSQL server and a random password is assigned for the `postgres` user. The password set for the `postgres` user can be retrieved from the container logs.
 
 ``` bash
 docker logs postgresql
@@ -67,13 +67,13 @@ In the output you will notice the following lines with the password:
 |------------------------------------------------------------------|
 ```
 
-Assuming you have psql installed on the host, you can test if the PostgreSQL server is working properly, by try connecting to the server:
+Assuming you have `psql` installed on the host, you can test if the PostgreSQL server is working properly by connecting to the server:
 
 ``` bash
 psql -U postgres -h $(docker inspect --format {{.NetworkSettings.IPAddress}} postgresql)
 ```
 
-If you don't have `psql` installed on the host you will need to shell into the container and perform the psql tests there. Since we are running CoreOS at DigitalOcean, we have a readonly filesystem. This means we can't install tools the traditional way.
+If you don't have `psql` installed on the host you will need to shell into the container and perform the `psql` tests there. Since we are running CoreOS at DigitalOcean, we have a readonly filesystem. This means we can't install tools the traditional way.
 
 See [Shell Access](#shell-access) for instructions on how to install `nsenter` and `docker-enter` on a host. Once this is installed you can use `docker-enter` to shell into the container and play with `psql`.
 
@@ -105,7 +105,7 @@ root@965a5c5d2e55:~# logout
 
 ### Ports
 
-This installation exposes port 5432.
+This installation exposes port `5432`.
 
 ### Data Store
 
@@ -118,7 +118,7 @@ mkdir -p /opt/postgresql/data
 sudo chcon -Rt svirt_sandbox_file_t /opt/postgresql/data
 ```
 
-The updated run command looks like this:
+The updated `run` command looks like this:
 
 ``` bash
 docker run --name postgresql -d -v /opt/postgresql/data:/var/lib/postgresql brightcommerce/postgresql:latest
@@ -128,7 +128,7 @@ This will make sure that the data stored in the database is not lost when the im
 
 ### Securing The Server
 
-By default a randomly generated password is assigned for the postgres user. The password is stored in a file named `pwpass` in the data store and is printed in the logs.
+By default a randomly generated password is assigned for the `postgres` user. The password is stored in a file named `pwpass` in the data store and is printed in the logs.
 
 If you don't want this password to be displayed in the logs, then please note down the password listed in `/opt/postgresql/data/pwpass` and then delete the file.
 
@@ -137,7 +137,7 @@ cat /opt/postgresql/data/pwfile
 rm /opt/postgresql/data/pwfile
 ```
 
-Alternately, you can change the password of the postgres user
+Alternately, you can change the password of the `postgres` user:
 
 ``` bash
 psql -U postgres -h $(docker inspect --format {{.NetworkSettings.IPAddress}} postgresql) password postgres
@@ -149,13 +149,13 @@ For debugging and maintenance purposes you may want access the container shell. 
 
 Some linux distros (e.g. ubuntu) use older versions of the util-linux which do not include the `nsenter` tool. To get around this @jpetazzo has created a nice docker image that allows you to install the `nsenter` utility and a helper script named `docker-enter` on these distros.
 
-To install the nsenter tool on your host execute the following command.
+To install the `nsenter` tool on your host execute the following command:
 
 ``` bash
 docker run --rm -v /usr/local/bin:/target jpetazzo/nsenter
 ```
 
-If you are running CoreOS on the host and have difficulties using the above command because of the readonly filesystem, execute the following instructions in the `core` user's home directory:
+If you are running CoreOS on the host and have difficulties using the above command because of the readonly filesystem, execute the following instructions in the `core` users' home directory:
 
 ``` bash
 mkdir -p tools/bin
@@ -173,13 +173,13 @@ sudo ln -s /root/.bashrc /root/.bash_profile
 source ~/.bashrc
 ````
 
-Now you can access the container shell using the command:
+Now you can access the container shell using the `docker-enter` command:
 
 ``` bash
 sudo docker-enter postgresql
 ```
 
-For more information refer https://github.com/jpetazzo/nsenter
+For more information refer https://github.com/jpetazzo/nsenter.
 
 Another tool named `nsinit` can also be used for the same purpose. Please refer https://jpetazzo.github.io/2014/03/23/lxc-attach-nsinit-nsenter-docker-0-9/ for more information.
 
@@ -187,19 +187,19 @@ Another tool named `nsinit` can also be used for the same purpose. Please refer 
 
 To upgrade to newer releases, simply follow this 3 step upgrade procedure.
 
-- **Step 1**: Stop the currently running image
+- **Step 1**: Stop the currently running image:
 
 ``` bash
 docker stop postgresql
 ```
 
-- **Step 2**: Update the docker image.
+- **Step 2**: Update the docker image:
 
 ``` bash
 docker pull brightcommerce/postgresql:latest
 ```
 
-- **Step 3**: Start the image
+- **Step 3**: Start the image:
 
 ``` bash
 docker run --name postgresql -d [OPTIONS] brightcommerce/postgresql:latest
@@ -207,4 +207,4 @@ docker run --name postgresql -d [OPTIONS] brightcommerce/postgresql:latest
 
 ## Credit
 
-This repository was based on the work of [docker-postgresql by Sameer Naik](https://github.com/sameersbn/docker-postgresql). Updated to install PostgreSQL v9.3.5 and contribs.
+This repository was based on the work of [docker-postgresql by Sameer Naik](https://github.com/sameersbn/docker-postgresql). Updated to install PostgreSQL v9.3.5 with contribs and postgis.
